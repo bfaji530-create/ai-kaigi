@@ -581,7 +581,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     for (var i = 0; i < S.models.length; i++) if (S.models[i].id === id) return S.models[i];
     return null;
   }
-  var SKIP = /(image|audio|tts|transcribe|embed|realtime|:batch|guard|moderation|whisper|dall|veo|imagine|video|stt|voice|search-preview|:free)/i;
+  var SKIP = /(image|audio|tts|transcribe|embed|realtime|:batch|guard|moderation|whisper|dall|veo|imagine|video|stt|voice|search-preview|:free|nano-banana|lyria|custom-tools)/i;
   function modelsFor(slot) {
     var pre = SLOTS[slot].prefix;
     var list = S.models.filter(function (m) {
