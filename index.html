@@ -4,7 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<title>AI五社会議</title>
+<title>スタードッグス AI5社会議</title>
+<meta name="application-name" content="スタードッグス AI5社会議">
+<meta name="apple-mobile-web-app-title" content="AI5社会議">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Old+Mincho:wght@600;700&display=swap">
@@ -71,6 +73,7 @@ a{color:var(--accent)}
 .mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px 12px;border-bottom:1px solid var(--rule)}
 .mast-id{display:flex;align-items:center;gap:12px;min-width:0}
 .mast h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:var(--t-xl);letter-spacing:.1em;line-height:1.2;text-wrap:balance}
+.brand{display:block;margin-bottom:3px;font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.32em;color:var(--shu)}
 .lede{margin:2px 0 0;font-size:var(--t-xs);color:var(--muted);line-height:1.5}
 .status{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:var(--t-xs);padding:4px 10px;border:1px solid var(--rule);border-radius:999px;white-space:nowrap;color:var(--muted)}
 .status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
@@ -231,7 +234,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     <div class="mast-id">
       <span class="seal seal-mast" aria-hidden="true">議</span>
       <div>
-        <h1>AI五社会議</h1>
+        <h1><span class="brand">スタードッグス</span>AI5社会議</h1>
         <p class="lede">Claude・GPT・Gemini・Grok・Perplexityが議論し、書記が報告をまとめます</p>
       </div>
     </div>
@@ -1475,7 +1478,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
   }
   function allPlain() {
     return [
-      'AI五社会議　会議録',
+      'スタードッグス AI5社会議　会議録',
       '日時：' + fmtDate(S.startedAt),
       '議題：' + S.topic,
       '出席者：' + S.active.map(function (i) { var p = S.people[i]; return p.name + '（' + p.role.split('。')[0] + '／' + p.model + '）'; }).join('、'),

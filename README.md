@@ -1,4 +1,4 @@
-# AI五社会議
+# スタードッグス AI5社会議
 
 Claude・GPT・Gemini・Grok・Perplexity を OpenRouter 経由で順番に議論させ、書記役が報告をまとめるページです。
 
