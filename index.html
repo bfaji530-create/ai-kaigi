@@ -153,7 +153,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
 .pname{flex:1;min-width:0;width:100%;border:none;background:transparent;padding:0;font-weight:700;font-size:17px;color:var(--ink)}
 .pon{display:flex;align-items:center;gap:6px;font-size:var(--t-xs);color:var(--muted);white-space:nowrap}
 .pon input{width:20px;height:20px;accent-color:var(--ok)}
-.prole{border:none;background:transparent;padding:0;resize:none;width:100%;line-height:1.5;color:var(--muted);font-size:15px}
+.prole{border:none;background:transparent;padding:0;resize:none;width:100%;line-height:1.5;color:var(--muted);font-size:15px;overflow:hidden}
 .prole:focus,.pname:focus{color:var(--ink)}
 .pmodel{width:100%;padding:7px 10px;border:none;border-radius:9px;background:var(--fill);font-size:14px}
 #rate,#scribeModel{padding:10px 12px;border:none;border-radius:var(--r-card);background:var(--sheet)}
@@ -348,7 +348,7 @@ body.in-meeting .mast .status{display:none}
         </div>
 
         <div class="field">
-          <span class="field-label">出席者 <small>（上から順に発言。役割とモデルは変えられます）</small></span>
+          <span class="field-label">出席者 <small>（上から順に発言。役割とモデルは変えられます。料金は100万トークンあたり 入力/出力）</small></span>
           <div class="people" id="people"></div>
         </div>
 
@@ -383,7 +383,7 @@ body.in-meeting .mast .status{display:none}
         </div>
 
         <div class="field" id="talkField">
-          <label class="check-line" for="autoSend"><input type="checkbox" id="autoSend">「話す」で話し終わったら、そのまま送る</label>
+          <label class="check-line" for="autoSend"><input type="checkbox" id="autoSend">話し終わったら自動で送る（「話す」ボタン）</label>
         </div>
 
         <div class="field">
@@ -683,7 +683,7 @@ body.in-meeting .mast .status{display:none}
     var a = +p.prompt * 1e6, b = +p.completion * 1e6;
     if (!isFinite(a) || !isFinite(b)) return '';
     var f = function (x) { return x >= 10 ? x.toFixed(0) : x >= 1 ? x.toFixed(2).replace(/\.?0+$/, '') : x.toFixed(3).replace(/\.?0+$/, ''); };
-    return '入力$' + f(a) + '・出力$' + f(b);
+    return '$' + f(a) + '/$' + f(b);
   }
   function modelLabel(m) {
     var n = String(m.name || m.id).replace(/^[^:]+:\s*/, '');
@@ -1129,12 +1129,14 @@ body.in-meeting .mast .status{display:none}
       top.appendChild(nl); top.appendChild(name); top.appendChild(on);
       var rl = el('label', 'sr', (i + 1) + '人目の役割'); rl.htmlFor = 'prole' + i;
       var role = el('textarea', 'prole'); role.id = 'prole' + i; role.rows = 2; role.maxLength = 200; role.value = p.role;
-      role.addEventListener('input', function () { p.role = role.value.trim(); markCustom(); saveSettings(); });
+      var fit = function () { role.style.height = 'auto'; role.style.height = role.scrollHeight + 'px'; };
+      role.addEventListener('input', function () { fit(); p.role = role.value.trim(); markCustom(); saveSettings(); });
       var ml = el('label', 'sr', (i + 1) + '人目のモデル'); ml.htmlFor = 'pmodel' + i;
       var sel = el('select', 'pmodel'); sel.id = 'pmodel' + i;
       fillModelSelect(sel, p.slot, p.model);
       sel.addEventListener('change', function () { p.model = sel.value; saveSettings(); });
       f.appendChild(top); f.appendChild(rl); f.appendChild(role); f.appendChild(ml); f.appendChild(sel);
+      requestAnimationFrame(fit);
       row.appendChild(seal); row.appendChild(f);
       box.appendChild(row);
     });
@@ -1159,7 +1161,7 @@ body.in-meeting .mast .status{display:none}
       if (!p.model || seen[p.model]) return;
       seen[p.model] = 1;
       var m = modelInfo(p.model);
-      var o = el('option', null, SLOTS[p.slot].name + '：' + (m ? modelLabel(m) : p.model));
+      var o = el('option', null, m ? modelLabel(m) : p.model);
       o.value = p.model;
       sel.appendChild(o);
     });
