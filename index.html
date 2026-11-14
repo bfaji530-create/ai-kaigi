@@ -290,6 +290,8 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
 .h-chev{grid-row:1 / span 2;grid-column:2;align-self:center;color:var(--muted);font-size:22px;line-height:1}
 .h-more{width:100%;padding:11px 16px;border:none;background:none;color:var(--accent);font-weight:600;font-size:14px;text-align:left}
 .btn-danger{color:var(--shu)}
+.key-mini{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:-8px;padding:10px 14px;border-radius:var(--r-card);background:var(--sheet);font-size:var(--t-xs);color:var(--muted)}
+.key-mini b{color:var(--ok);font-weight:700}
 body.in-meeting .mast .status{display:none}
 </style>
 </head>
@@ -322,7 +324,7 @@ body.in-meeting .mast .status{display:none}
   <main id="scroll" class="scroll">
     <section id="setup" class="setup" aria-label="接続・議題・出席者">
       <div id="setupForm">
-        <div class="field box">
+        <div class="field box" id="keyBox">
           <label class="field-label" for="apiKey">OpenRouterのAPIキー</label>
           <div class="key-row">
             <input type="password" id="apiKey" autocomplete="off" spellcheck="false" placeholder="sk-or-v1-…">
@@ -393,6 +395,7 @@ body.in-meeting .mast .status{display:none}
 
         <button id="btnStart" type="button" class="btn-start">開会する</button>
         <p class="foot">利用料はOpenRouterのクレジットから引かれます。会議中の費用は上に表示します。出てきた数字や事実は、使う前に裏取りしてください。</p>
+        <div id="keyMini" class="key-mini" hidden><span id="keyMiniText">OpenRouter：キー保存済み</span><button id="btnKeyEdit" type="button" class="btn-ghost btn-sm">キーを変える</button></div>
       </div>
 
       <div id="setupBrief" class="brief" hidden>
@@ -703,14 +706,27 @@ body.in-meeting .mast .status{display:none}
     var claude = S.people.filter(function (p) { return p.slot === 'claude'; })[0];
     if (!S.scribeModel || (S.models.length && !modelInfo(S.scribeModel))) S.scribeModel = claude ? claude.model : SLOTS.claude.prefs[0];
   }
+  var keyEditing = false;
+  function updateKeyUI() {
+    var collapsed = !!S.key && !keyEditing;
+    $('keyBox').hidden = collapsed;
+    $('keyMini').hidden = !collapsed;
+  }
+  function setKeyMini(ok, rest) {
+    var t = $('keyMiniText');
+    t.textContent = 'OpenRouter：';
+    t.appendChild(el('b', null, ok ? '接続済み' : 'キー保存済み'));
+    if (rest) t.appendChild(document.createTextNode('・' + rest));
+  }
   async function checkKey() {
     var note = $('keyNote');
+    updateKeyUI();
     if (!S.key) { note.textContent = 'キーはこの端末のブラウザにだけ保存し、OpenRouter以外には送りません。'; $('btnKeyClear').hidden = true; return; }
     $('btnKeyClear').hidden = false;
     note.textContent = 'キーを確かめています…';
     try {
       var res = await fetch(OR_BASE + '/key', { headers: headers() });
-      if (res.status === 401) { note.textContent = ''; note.appendChild(el('span', 'key-bad', 'このキーは使えません。')); note.appendChild(document.createTextNode(' OpenRouterでキーを確かめて、入れ直してください。')); return; }
+      if (res.status === 401) { keyEditing = true; updateKeyUI(); note.textContent = ''; note.appendChild(el('span', 'key-bad', 'このキーは使えません。')); note.appendChild(document.createTextNode(' OpenRouterでキーを確かめて、入れ直してください。')); return; }
       var j = await res.json();
       var d = (j && j.data) || {};
       note.textContent = '';
@@ -719,8 +735,10 @@ body.in-meeting .mast .status{display:none}
       if (typeof d.limit_remaining === 'number') parts.push('このキーの残り $' + d.limit_remaining.toFixed(2));
       if (typeof d.usage === 'number') parts.push('これまでの利用 $' + d.usage.toFixed(2));
       note.appendChild(document.createTextNode(' ' + parts.join('・') + (parts.length ? '。' : '') + 'キーはこの端末にだけ保存しています。'));
+      setKeyMini(true, typeof d.limit_remaining === 'number' ? '残り $' + d.limit_remaining.toFixed(2) : '');
     } catch (e) {
       note.textContent = 'キーは保存しました（確認の通信はできませんでした）。';
+      setKeyMini(false, '');
     }
   }
 
@@ -1691,7 +1709,7 @@ body.in-meeting .mast .status{display:none}
   // ---------- 操作 ----------
   async function start() {
     readSetup();
-    if (!S.key) { showNotice('先にOpenRouterのAPIキーを入れて「保存」を押してください。'); $('apiKey').focus(); return; }
+    if (!S.key) { keyEditing = true; updateKeyUI(); showNotice('先にOpenRouterのAPIキーを入れて「保存」を押してください。'); $('apiKey').focus(); return; }
     if (!S.topic) { showNotice('議題を入れてください。'); $('topic').focus(); return; }
     var act = [];
     S.people.forEach(function (p, i) { if (p.on && p.name && p.model) act.push(i); });
@@ -1852,6 +1870,7 @@ body.in-meeting .mast .status{display:none}
   $('btnKeySave').addEventListener('click', function () {
     S.key = $('apiKey').value.trim();
     if (S.key) lsSet(STORE_KEY, S.key); else lsDel(STORE_KEY);
+    keyEditing = !S.key;
     checkKey();
   });
   $('btnKeyClear').addEventListener('click', function () {
@@ -1859,6 +1878,12 @@ body.in-meeting .mast .status{display:none}
     $('apiKey').value = '';
     lsDel(STORE_KEY);
     checkKey();
+  });
+  $('btnKeyEdit').addEventListener('click', function () {
+    keyEditing = true;
+    updateKeyUI();
+    $('scroll').scrollTop = 0;
+    $('apiKey').focus();
   });
   $('topic').addEventListener('input', function () { S.topic = $('topic').value; saveSettings(); });
   document.querySelectorAll('input[name="preset"]').forEach(function (r) {
