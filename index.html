@@ -7,225 +7,290 @@
 <title>スタードッグス AI5社会議</title>
 <meta name="application-name" content="スタードッグス AI5社会議">
 <meta name="apple-mobile-web-app-title" content="AI5社会議">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=Zen+Old+Mincho:wght@600;700&display=swap">
 <style>
 :root{
-  /* 会議録の紙面。上に接続・議題・出席者、中ほどに書記の報告と発言録、下に発言欄。発言者は印影の色と字で見分ける */
-  --paper:#e7eae3;
-  --sheet:#fbfbf7;
-  --wash:#f0f2ec;
-  --ink:#1b1f26;
-  --muted:#5a606a;
-  --rule:#d2d7cd;
-  --accent:#27448a;
+  /* iPhoneの設定アプリとメッセージを手本にした画面。灰色の地に白い角丸カード、会話は吹き出し、話している人は上の列で動く */
+  --paper:#f2f2f7;
+  --sheet:#ffffff;
+  --wash:#f2f2f7;
+  --fill:rgba(118,118,128,.12);
+  --seg-on:#ffffff;
+  --ink:#1c1c1e;
+  --muted:#86868b;
+  --rule:rgba(60,60,67,.16);
+  --accent:#007aff;
   --on-accent:#ffffff;
-  --shu:#c23b29;
-  --c-claude:#a24a1f;
-  --c-gpt:#2b6a50;
-  --c-gemini:#27448a;
-  --c-grok:#3a404b;
-  --c-pplx:#1d6b78;
-  --ph:#7c5a10;
-  --warn:#94650a;
-  --ok:#2b6a50;
-  --bad:#b0302a;
-  --f-display:"Zen Old Mincho","Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif;
-  --f-body:"BIZ UDPGothic","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans JP",system-ui,sans-serif;
+  --shu:#ff3b30;
+  --brand:#ff8a00;
+  --on-pc:#ffffff;
+  --bubble:#e9e9eb;
+  --p0:#5856d6; --p1:#e0245e; --p2:#248a3d;
+  --c-claude:#e0700b; --c-gpt:#248a3d; --c-gemini:#007aff; --c-grok:#48484a; --c-pplx:#0f8aa3;
+  --ph:#007aff;
+  --warn:#ff9500; --ok:#34c759; --bad:#ff3b30;
+  --f-display:-apple-system,BlinkMacSystemFont,"SF Pro Display","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;
+  --f-body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo",system-ui,sans-serif;
   --t-xs:12px;
-  --t-sm:13.5px;
-  --t-md:15.5px;
-  --t-lg:19px;
-  --t-xl:25px;
+  --t-sm:13px;
+  --t-md:16px;
+  --t-lg:20px;
+  --t-xl:28px;
+  --r-card:14px;
   color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0f1115; --sheet:#171a1f; --wash:#1f232a; --ink:#e6e8ec; --muted:#9aa0aa; --rule:#2c3139;
-    --accent:#93aaf0; --on-accent:#0f1115; --shu:#f07a62;
-    --c-claude:#f0a079; --c-gpt:#7cc7a5; --c-gemini:#93aaf0; --c-grok:#c9ced6; --c-pplx:#72c6d3; --ph:#e0b85a;
-    --warn:#e0b85a; --ok:#7cc7a5; --bad:#f08a80;
+    --paper:#000000; --sheet:#1c1c1e; --wash:#2c2c2e; --fill:rgba(118,118,128,.24); --seg-on:#636366;
+    --ink:#f2f2f7; --muted:#98989f; --rule:rgba(84,84,88,.55);
+    --accent:#0a84ff; --shu:#ff453a; --brand:#ff9f0a; --on-pc:#000000; --bubble:#2c2c2e;
+    --p0:#7d7aff; --p1:#ff6482; --p2:#30d158;
+    --c-claude:#ff9f0a; --c-gpt:#30d158; --c-gemini:#409cff; --c-grok:#aeaeb2; --c-pplx:#40c8e0;
+    --ph:#0a84ff; --warn:#ff9f0a; --ok:#30d158; --bad:#ff453a;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0f1115; --sheet:#171a1f; --wash:#1f232a; --ink:#e6e8ec; --muted:#9aa0aa; --rule:#2c3139;
-  --accent:#93aaf0; --on-accent:#0f1115; --shu:#f07a62;
-  --c-claude:#f0a079; --c-gpt:#7cc7a5; --c-gemini:#93aaf0; --c-grok:#c9ced6; --c-pplx:#72c6d3; --ph:#e0b85a;
-  --warn:#e0b85a; --ok:#7cc7a5; --bad:#f08a80;
+  --paper:#000000; --sheet:#1c1c1e; --wash:#2c2c2e; --fill:rgba(118,118,128,.24); --seg-on:#636366;
+  --ink:#f2f2f7; --muted:#98989f; --rule:rgba(84,84,88,.55);
+  --accent:#0a84ff; --shu:#ff453a; --brand:#ff9f0a; --on-pc:#000000; --bubble:#2c2c2e;
+  --p0:#7d7aff; --p1:#ff6482; --p2:#30d158;
+  --c-claude:#ff9f0a; --c-gpt:#30d158; --c-gemini:#409cff; --c-grok:#aeaeb2; --c-pplx:#40c8e0;
+  --ph:#0a84ff; --warn:#ff9f0a; --ok:#30d158; --bad:#ff453a;
   color-scheme:dark;
 }
 
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--t-md);line-height:1.75;-webkit-text-size-adjust:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:var(--t-md);line-height:1.6;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font:inherit;color:inherit}
-button{cursor:pointer}
-button:disabled{cursor:not-allowed;opacity:.5}
-a{color:var(--accent)}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:not-allowed;opacity:.4}
+a{color:var(--accent);text-decoration:none}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 [hidden]{display:none !important}
 
-.app{max-width:760px;height:100%;margin:0 auto;display:flex;flex-direction:column;background:var(--sheet);border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
+.app{max-width:760px;height:100%;margin:0 auto;display:flex;flex-direction:column;background:var(--paper)}
 
-.mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px 12px;border-bottom:1px solid var(--rule)}
+/* 見出し */
+.mast{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px 10px;background:var(--paper)}
 .mast-id{display:flex;align-items:center;gap:12px;min-width:0}
-.mast h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:var(--t-xl);letter-spacing:.1em;line-height:1.2;text-wrap:balance}
-.brand{display:block;margin-bottom:3px;font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.32em;color:var(--shu)}
-.lede{margin:2px 0 0;font-size:var(--t-xs);color:var(--muted);line-height:1.5}
-.status{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:var(--t-xs);padding:4px 10px;border:1px solid var(--rule);border-radius:999px;white-space:nowrap;color:var(--muted)}
+.mast h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:var(--t-xl);letter-spacing:-.01em;line-height:1.15}
+.brand{display:block;margin-bottom:3px;font-size:12px;font-weight:600;letter-spacing:.08em;color:var(--brand)}
+.lede{margin:3px 0 0;font-size:var(--t-xs);color:var(--muted);line-height:1.45}
+.status{flex:none;display:inline-flex;align-items:center;gap:6px;font-size:var(--t-xs);font-weight:600;padding:5px 11px;border-radius:999px;background:var(--fill);color:var(--muted);white-space:nowrap}
 .status::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--muted)}
 .status[data-kind="thinking"]::before,.status[data-kind="summarizing"]::before{background:var(--accent);animation:pulse 1.1s ease-in-out infinite}
 .status[data-kind="speaking"]::before,.status[data-kind="listening"]::before{background:var(--ok);animation:pulse .7s ease-in-out infinite}
 .status[data-kind="paused"]::before{background:var(--warn)}
-.status[data-kind="done"]::before{background:var(--shu)}
+.status[data-kind="done"]::before{background:var(--ok)}
 .status[data-kind="error"]::before,.status[data-kind="stopped"]::before{background:var(--bad)}
 .status[data-kind="thinking"],.status[data-kind="speaking"],.status[data-kind="summarizing"],.status[data-kind="listening"]{color:var(--ink)}
 
-.notice{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;padding:10px 18px;background:var(--wash);border-bottom:1px solid var(--rule);box-shadow:inset 3px 0 0 var(--warn);font-size:var(--t-sm);line-height:1.6}
+.notice{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin:0 16px 8px;padding:10px 14px;border-radius:12px;background:var(--sheet);box-shadow:inset 3px 0 0 var(--warn);font-size:var(--t-sm);line-height:1.6}
 .notice-body{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
 .notice-x{border:none;background:transparent;font-size:18px;line-height:1;padding:2px 4px;color:var(--muted)}
 
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 18px 28px;display:flex;flex-direction:column;gap:22px}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 16px 28px;display:flex;flex-direction:column;gap:22px}
 
-.seal{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:19px;line-height:1;color:var(--pc,var(--accent));border:2px solid var(--pc,var(--accent));box-shadow:inset 0 0 0 2px var(--sheet),inset 0 0 0 3.5px var(--pc,var(--accent));transform:rotate(-8deg);user-select:none}
-.seal-mast{--pc:var(--shu);width:44px;height:44px;font-size:21px}
+/* アイコン（丸） */
+.seal{flex:none;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--pc,var(--accent));color:var(--on-pc);font-family:var(--f-display);font-weight:700;font-size:17px;line-height:1;user-select:none}
+.seal-mast{width:46px;height:46px;border-radius:11px;font-size:22px;color:#fff;background:linear-gradient(160deg,#ffb340,#ff5a36);box-shadow:0 4px 10px -4px rgba(255,90,54,.6)}
 
-.setup{display:flex;flex-direction:column;gap:18px}
-#setupForm{display:flex;flex-direction:column;gap:18px}
-.field{display:flex;flex-direction:column;gap:8px}
+/* 話している人の列 */
+.stage{flex:none;padding:4px 12px 10px;background:var(--paper);border-bottom:1px solid var(--rule)}
+.stage-row{display:flex;justify-content:center;gap:clamp(4px,2.4vw,20px)}
+.av{display:flex;flex-direction:column;align-items:center;gap:3px;width:60px;padding:6px 0 0;border:none;background:none;color:inherit;transition:opacity .25s}
+.stage.is-busy .av{opacity:.42}
+.stage.is-busy .av[data-state="thinking"],.stage.is-busy .av[data-state="speaking"]{opacity:1}
+.av-face{position:relative;width:46px;height:46px;border-radius:50%;background:var(--pc);color:var(--on-pc);display:grid;place-items:center;font-weight:700;font-size:20px;line-height:1}
+.av-face::after{content:"";position:absolute;inset:-5px;border-radius:50%;border:2.5px solid var(--pc);opacity:0}
+.av-name{max-width:60px;font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.av-eq{display:flex;gap:2px;align-items:flex-end;height:9px}
+.av-eq i{width:3px;height:3px;border-radius:2px;background:var(--pc);opacity:.2}
+.av[data-state="thinking"] .av-face::after{opacity:.9;border-style:dashed;animation:spin 2.2s linear infinite}
+.av[data-state="speaking"] .av-face{animation:bob .9s ease-in-out infinite}
+.av[data-state="speaking"] .av-face::after{animation:ripple 1.2s ease-out infinite}
+.av[data-state="speaking"] .av-name,.av[data-state="thinking"] .av-name{color:var(--ink)}
+.av[data-state="speaking"] .av-eq i{opacity:1;animation:eq .6s ease-in-out infinite}
+.av-eq i:nth-child(2){animation-delay:.15s}
+.av-eq i:nth-child(3){animation-delay:.3s}
+.stage-cap{margin:4px 0 0;text-align:center;font-size:12px;font-weight:600;color:var(--muted);min-height:1.2em}
+
+/* 設定 */
+.setup{display:flex;flex-direction:column;gap:22px}
+#setupForm{display:flex;flex-direction:column;gap:22px}
+.field{display:flex;flex-direction:column;gap:7px}
 .field.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.field.two>div{display:flex;flex-direction:column;gap:8px;min-width:0}
-.field-label{font-size:var(--t-xs);font-weight:700;letter-spacing:.14em;color:var(--muted)}
-.field-label small{font-weight:400;letter-spacing:0}
-.sub{margin:0;font-size:var(--t-xs);color:var(--muted);line-height:1.5}
+.field.two>div{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field-label{padding:0 4px;font-size:var(--t-sm);font-weight:600;color:var(--muted)}
+.field-label small{font-weight:400}
+.sub{margin:0;padding:0 4px;font-size:var(--t-xs);color:var(--muted);line-height:1.5}
 textarea,select,input[type="text"],input[type="password"]{font-size:16px}
-.box{padding:12px 14px;border:1px solid var(--rule);border-radius:10px;background:var(--wash)}
+.box{padding:14px 16px;border-radius:var(--r-card);background:var(--sheet)}
+.box .field-label,.box .sub{padding:0}
 .key-row{display:flex;gap:8px}
-#apiKey{flex:1;min-width:0;padding:9px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--sheet);font-family:ui-monospace,Menlo,monospace}
+#apiKey{flex:1;min-width:0;padding:10px 12px;border:none;border-radius:10px;background:var(--fill);font-family:ui-monospace,Menlo,monospace}
 .key-ok{color:var(--ok);font-weight:700}
 .key-bad{color:var(--bad);font-weight:700}
-#topic{width:100%;min-height:86px;resize:vertical;padding:10px 12px;border:1px solid var(--rule);border-radius:6px;background:var(--wash);line-height:1.6}
+#topic{width:100%;min-height:96px;resize:vertical;padding:12px 14px;border:none;border-radius:var(--r-card);background:var(--sheet);line-height:1.55}
 .examples{display:flex;flex-wrap:wrap;gap:6px}
-.chip{border:1px dashed var(--rule);background:transparent;color:var(--muted);border-radius:999px;padding:4px 11px;font-size:var(--t-xs);line-height:1.5;text-align:left}
-.chip:hover{color:var(--ink);border-color:var(--muted)}
-.seg{position:relative;display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.chip{border:none;background:var(--fill);color:var(--ink);border-radius:999px;padding:6px 12px;font-size:var(--t-xs);line-height:1.45;text-align:left}
+.chip:active{opacity:.6}
+.seg{position:relative;display:flex;gap:2px;padding:2px;border-radius:9px;background:var(--fill)}
 .seg input{position:absolute;top:0;left:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
-.seg label{flex:1;text-align:center;padding:8px 6px;font-size:var(--t-sm);cursor:pointer;line-height:1.4;border-left:1px solid var(--rule);white-space:nowrap}
-.seg label:first-of-type{border-left:none}
-.seg input:checked+label{background:var(--ink);color:var(--sheet)}
-.seg input:focus-visible+label{outline:2px solid var(--accent);outline-offset:-2px}
+.seg label{flex:1;text-align:center;padding:7px 6px;border-radius:7px;font-size:var(--t-sm);font-weight:500;line-height:1.35;cursor:pointer;white-space:nowrap;transition:background .2s,box-shadow .2s}
+.seg input:checked+label{background:var(--seg-on);font-weight:600;box-shadow:0 3px 8px rgba(0,0,0,.12),0 1px 1px rgba(0,0,0,.04)}
+.seg input:focus-visible+label{outline:2px solid var(--accent);outline-offset:1px}
 .seg input:disabled+label{opacity:.4;cursor:not-allowed}
-
-.people{display:flex;flex-direction:column}
-.person{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:12px 0;border-top:1px solid var(--rule)}
-.person:last-child{border-bottom:1px solid var(--rule)}
+.people{display:flex;flex-direction:column;background:var(--sheet);border-radius:var(--r-card);overflow:hidden}
+.person{position:relative;display:grid;grid-template-columns:40px 1fr;gap:12px;padding:12px 14px}
+.person+.person::before{content:"";position:absolute;top:0;left:66px;right:0;height:1px;background:var(--rule)}
 .person.is-off{opacity:.45}
-.person .seal{margin-top:4px}
+.person .seal{margin-top:2px}
 .person-fields{display:flex;flex-direction:column;gap:4px;min-width:0}
 .person-top{display:flex;align-items:center;gap:8px}
-.pname{flex:1;min-width:0;border:none;border-bottom:1px dashed var(--rule);background:transparent;padding:2px 0;font-family:var(--f-display);font-weight:700;font-size:17px;color:var(--pc)}
-.pon{display:flex;align-items:center;gap:4px;font-size:var(--t-xs);color:var(--muted);white-space:nowrap}
-.pon input{width:18px;height:18px;accent-color:var(--accent)}
-.prole{border:none;background:transparent;padding:2px 0;resize:none;width:100%;line-height:1.55;color:var(--ink)}
-.pmodel{width:100%;padding:6px 8px;border:1px solid var(--rule);border-radius:7px;background:var(--wash);font-size:14px}
-#rate,#scribeModel{padding:8px 10px;border:1px solid var(--rule);border-radius:8px;background:var(--wash)}
-#rate{max-width:220px}
-.check-line{display:flex;align-items:center;gap:8px;font-size:var(--t-sm)}
-.check-line input{width:18px;height:18px;accent-color:var(--accent)}
-.btn-start{border:none;border-radius:8px;background:var(--ink);color:var(--sheet);font-family:var(--f-display);font-weight:700;font-size:18px;letter-spacing:.3em;padding:13px;width:100%}
-.btn-start:hover{background:var(--accent);color:var(--on-accent)}
-.foot{margin:-6px 0 0;font-size:var(--t-xs);color:var(--muted);line-height:1.6}
+.pname{flex:1;min-width:0;width:100%;border:none;background:transparent;padding:0;font-weight:700;font-size:17px;color:var(--ink)}
+.pon{display:flex;align-items:center;gap:6px;font-size:var(--t-xs);color:var(--muted);white-space:nowrap}
+.pon input{width:20px;height:20px;accent-color:var(--ok)}
+.prole{border:none;background:transparent;padding:0;resize:none;width:100%;line-height:1.5;color:var(--muted);font-size:15px}
+.prole:focus,.pname:focus{color:var(--ink)}
+.pmodel{width:100%;padding:7px 10px;border:none;border-radius:9px;background:var(--fill);font-size:14px}
+#rate,#scribeModel{padding:10px 12px;border:none;border-radius:var(--r-card);background:var(--sheet)}
+#rate{max-width:240px}
+.check-line{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--sheet);border-radius:var(--r-card);font-size:15px}
+.check-line input{width:20px;height:20px;accent-color:var(--ok)}
+.btn-start{border:none;border-radius:var(--r-card);background:var(--accent);color:#fff;font-family:var(--f-display);font-weight:600;font-size:17px;padding:15px;width:100%}
+.btn-start:active{opacity:.75}
+.foot{margin:-8px 0 0;padding:0 4px;font-size:var(--t-xs);color:var(--muted);line-height:1.55}
 
-.brief{display:flex;flex-direction:column;gap:6px;padding-bottom:14px;border-bottom:1px solid var(--rule)}
+.brief{display:flex;flex-direction:column;gap:6px;padding:14px 16px;border-radius:var(--r-card);background:var(--sheet)}
 .brief-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.brief-topic{margin:0;font-family:var(--f-display);font-weight:600;font-size:var(--t-lg);line-height:1.5;text-wrap:balance;overflow-wrap:anywhere}
-.brief-people{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:var(--t-sm)}
-.brief-people span{color:var(--pc);font-weight:700}
+.brief-topic{margin:0;font-weight:600;font-size:16px;line-height:1.5;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.brief-people{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:var(--t-sm)}
+.brief-people span{color:var(--pc);font-weight:600}
 .brief-cost{font-size:var(--t-xs);color:var(--muted);font-variant-numeric:tabular-nums}
 
-.btn-ghost{border:1px solid var(--rule);background:transparent;padding:7px 12px;border-radius:7px;font-size:var(--t-sm);line-height:1.4;min-height:36px}
-.btn-ghost:hover{border-color:var(--muted)}
-.btn-sm{padding:4px 10px;min-height:30px;font-size:var(--t-xs)}
+.btn-ghost{border:none;background:var(--fill);color:var(--accent);padding:8px 14px;border-radius:999px;font-size:var(--t-sm);font-weight:600;line-height:1.3;min-height:34px}
+.btn-ghost:active{opacity:.6}
+.btn-sm{padding:5px 11px;min-height:28px;font-size:var(--t-xs)}
 
-.howto{border-top:1px solid var(--rule);padding-top:14px}
-.howto h2,.minutes-h{margin:0 0 6px;font-family:var(--f-display);font-weight:700;font-size:var(--t-md);letter-spacing:.14em}
-.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:8px}
-.steps li{counter-increment:s;display:grid;grid-template-columns:24px 1fr;gap:8px;font-size:var(--t-sm);line-height:1.65;color:var(--muted)}
-.steps li::before{content:counter(s);font-family:var(--f-display);font-weight:700;color:var(--ink);text-align:center;border:1px solid var(--rule);border-radius:50%;width:22px;height:22px;line-height:20px;font-size:12px;margin-top:1px}
-.steps b{color:var(--ink)}
+/* 使い方 */
+.howto{padding:14px 16px;border-radius:var(--r-card);background:var(--sheet)}
+.howto h2,.minutes-h{margin:0 0 8px;font-size:var(--t-sm);font-weight:600;color:var(--muted)}
+.minutes-h{padding:0 4px}
+.steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:10px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:22px 1fr;gap:10px;font-size:14px;line-height:1.55;color:var(--muted)}
+.steps li::before{content:counter(s);width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-weight:700;font-size:12px;display:grid;place-items:center;margin-top:1px}
+.steps b{color:var(--ink);font-weight:600}
 
-.report{border:1px solid var(--rule);border-radius:10px;padding:16px 16px 14px;background:var(--sheet);box-shadow:0 1px 0 var(--rule),0 10px 26px -18px rgba(0,0,0,.35)}
-.report.is-stale .report-body{opacity:.55}
+/* 書記の報告 */
+.report{border-radius:18px;padding:16px 18px 14px;background:var(--sheet);box-shadow:0 8px 24px -16px rgba(0,0,0,.25)}
+.report.is-stale .report-body{opacity:.5}
 .report-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.report-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.12em}
+.report-head h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:22px;letter-spacing:-.01em}
 .report-meta{margin:2px 0 0;font-size:var(--t-xs);color:var(--muted);font-variant-numeric:tabular-nums;line-height:1.5}
-.stamp{flex:none;width:54px;height:54px;border-radius:50%;border:3px solid var(--shu);color:var(--shu);display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1;transform:rotate(-14deg);opacity:.92;box-shadow:inset 0 0 0 2px var(--sheet),inset 0 0 0 4px var(--shu)}
-.stamp.is-pressed{animation:press .5s cubic-bezier(.2,.9,.3,1.2)}
-.report-stale{margin:8px 0 0;font-size:var(--t-xs);color:var(--warn)}
+.stamp{flex:none;width:40px;height:40px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-weight:700;font-size:20px;line-height:1}
+.stamp.is-pressed{animation:pop .45s cubic-bezier(.2,.9,.3,1.3)}
+.report-stale{margin:8px 0 0;font-size:var(--t-xs);color:var(--warn);font-weight:600}
 .report-body{margin-top:6px}
-.rep-h{margin:14px 0 4px;padding-bottom:2px;border-bottom:1px solid var(--rule);font-family:var(--f-display);font-weight:700;font-size:var(--t-md);letter-spacing:.08em}
-.rep-h:first-child{margin-top:6px}
+.rep-h{margin:16px 0 4px;font-size:15px;font-weight:700}
+.rep-h:first-child{margin-top:8px}
 .rep-p{margin:4px 0}
-.rep-list{margin:2px 0;padding-left:1.25em}
-.rep-list li{margin:2px 0}
-.rep-check{display:flex;align-items:flex-start;gap:8px;padding:3px 0;cursor:pointer}
-.rep-check input{flex:none;width:18px;height:18px;margin-top:5px;accent-color:var(--accent)}
+.rep-list{margin:2px 0;padding-left:1.2em}
+.rep-list li{margin:3px 0}
+.rep-check{display:flex;align-items:flex-start;gap:10px;padding:4px 0;cursor:pointer}
+.rep-check input{flex:none;width:20px;height:20px;margin-top:3px;accent-color:var(--ok)}
 .rep-check input:checked+span{text-decoration:line-through;color:var(--muted)}
 .rep-err{color:var(--bad)}
 .report-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 
-.log{list-style:none;margin:0;padding:0}
-.round{display:flex;align-items:center;gap:10px;padding:14px 0 4px;font-family:var(--f-display);font-weight:600;font-size:var(--t-sm);letter-spacing:.3em;color:var(--muted)}
-.round::before,.round::after{content:"";flex:1;height:1px;background:var(--rule)}
-.turn{display:grid;grid-template-columns:40px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--rule)}
-.turn-body{min-width:0}
-.turn-head{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.turn-name{font-family:var(--f-display);font-weight:700;font-size:16px;color:var(--pc)}
-.turn-role{font-size:var(--t-xs);color:var(--muted)}
-.turn-no{margin-left:auto;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
-.turn-text{margin:3px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
-.turn-cites{margin:4px 0 0;font-size:var(--t-xs);color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px}
+/* 会話（吹き出し） */
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.round{display:flex;justify-content:center;padding:8px 0 2px}
+.round span{font-size:11.5px;font-weight:600;color:var(--muted);background:var(--fill);padding:3px 10px;border-radius:999px}
+.turn{display:grid;grid-template-columns:34px minmax(0,1fr);gap:8px;align-items:end}
+.turn .seal{width:34px;height:34px;font-size:15px}
+.turn-body{min-width:0;max-width:88%}
+.turn-head{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;padding:0 12px 3px}
+.turn-name{font-weight:700;font-size:12.5px;color:var(--pc)}
+.turn-role{font-size:11.5px;color:var(--muted)}
+.turn-no{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.turn-text{margin:0;padding:9px 14px;border-radius:18px 18px 18px 6px;background:var(--bubble);white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.55;width:fit-content;max-width:100%}
+.turn-cites{margin:4px 0 0;padding:0 12px;font-size:var(--t-xs);color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 10px}
 .turn-cites a{overflow-wrap:anywhere}
-.turn-human{background:var(--wash);box-shadow:inset 3px 0 0 var(--ph);padding:12px 10px}
-.turn-human .turn-text{font-size:17.5px;font-weight:700}
-.turn.is-speaking .turn-name::after{content:"発言中";margin-left:8px;font-family:var(--f-body);font-weight:700;font-size:11px;letter-spacing:.06em;color:var(--sheet);background:var(--pc);border-radius:4px;padding:1px 6px;vertical-align:2px;animation:pulse 1s ease-in-out infinite}
+.turn.is-speaking .turn-text{box-shadow:0 0 0 2px var(--pc)}
+.turn.is-speaking .seal{animation:bob .9s ease-in-out infinite}
+.turn.is-speaking .turn-name::after{content:"発言中";margin-left:6px;font-size:10.5px;font-weight:700;color:var(--on-pc);background:var(--pc);border-radius:999px;padding:1px 7px;vertical-align:1px}
+.turn-human{grid-template-columns:minmax(0,1fr)}
+.turn-human .seal{display:none}
+.turn-human .turn-body{justify-self:end;display:flex;flex-direction:column;align-items:flex-end}
+.turn-human .turn-name{color:var(--muted)}
+.turn-human .turn-text{background:var(--ph);color:#fff;border-radius:18px 18px 6px 18px;font-size:16.5px;font-weight:500}
 .typing{color:var(--muted);font-size:var(--t-sm)}
-.typing i{display:inline-block;width:4px;height:4px;border-radius:50%;background:currentColor;margin-left:3px;vertical-align:middle;animation:blink 1.2s infinite}
+.typing i{display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;margin-left:3px;vertical-align:middle;animation:blink 1.2s infinite}
 .typing i:nth-child(2){animation-delay:.2s}
 .typing i:nth-child(3){animation-delay:.4s}
 
-.dock{flex:none;border-top:1px solid var(--rule);background:var(--sheet);padding:10px 14px calc(10px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
+/* 発言欄 */
+.dock{flex:none;background:var(--paper);border-top:1px solid var(--rule);padding:8px 12px calc(8px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:8px}
 .dock-row{display:flex;align-items:center;gap:8px}
-.btn-hand{flex:none;border:none;border-radius:8px;background:var(--accent);color:var(--on-accent);font-weight:700;padding:0 14px;height:40px;font-size:var(--t-sm)}
+.btn-hand{flex:none;border:none;border-radius:999px;background:var(--accent);color:#fff;font-weight:600;padding:0 16px;height:36px;font-size:var(--t-sm)}
 .btn-hand.is-resume{background:var(--ok)}
-#target{flex:1;min-width:0;height:40px;padding:0 8px;border:1px solid var(--rule);border-radius:8px;background:var(--wash)}
-.btn-speed{flex:none;min-width:52px;height:40px;padding:0 8px;border:1px solid var(--rule);border-radius:8px;background:transparent;font-weight:700;font-size:var(--t-sm);font-variant-numeric:tabular-nums}
-.btn-end{flex:none;border:1px solid var(--shu);color:var(--shu);background:transparent;border-radius:8px;padding:0 12px;height:40px;font-size:var(--t-sm);font-weight:700}
+#target{flex:1;min-width:0;height:36px;padding:0 10px;border:none;border-radius:999px;background:var(--fill);font-size:14px}
+.btn-speed{flex:none;min-width:48px;height:36px;padding:0 10px;border:none;border-radius:999px;background:var(--fill);font-weight:600;font-size:var(--t-sm);font-variant-numeric:tabular-nums}
+.btn-end{flex:none;border:none;border-radius:999px;background:var(--fill);color:var(--shu);padding:0 14px;height:36px;font-size:var(--t-sm);font-weight:600}
 .say-form{display:flex;align-items:flex-end;gap:8px}
-#say{flex:1;min-width:0;min-height:48px;max-height:160px;resize:none;padding:10px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--wash);line-height:1.55;font-size:18px}
-#say.is-listening{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok) inset}
-.btn-talk{flex:none;height:48px;padding:0 14px;border-radius:24px;border:none;background:var(--shu);color:#fff;font-weight:700;display:inline-flex;align-items:center;gap:6px}
-.btn-talk svg{width:18px;height:18px}
+#say{flex:1;min-width:0;min-height:40px;max-height:160px;resize:none;padding:9px 14px;border:1px solid var(--rule);border-radius:20px;background:var(--sheet);line-height:1.45;font-size:17px}
+#say.is-listening{border-color:var(--ok);box-shadow:0 0 0 2px var(--ok)}
+.btn-send{flex:none;width:40px;height:40px;border:none;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;padding:0}
+.btn-send svg{width:20px;height:20px}
+.btn-mic{flex:none;width:40px;height:40px;border-radius:50%;border:none;background:var(--fill);display:grid;place-items:center}
+.btn-mic svg{width:20px;height:20px}
+.btn-mic.is-on{background:var(--shu);color:#fff}
+.btn-talk{flex:none;height:40px;padding:0 14px;border-radius:20px;border:none;background:var(--shu);color:#fff;font-weight:600;display:inline-flex;align-items:center;gap:5px}
+.btn-talk svg{width:17px;height:17px}
 .btn-talk.is-on{background:var(--ok);animation:pulse 1s ease-in-out infinite}
-.btn-send{flex:none;height:48px;padding:0 16px;border:none;border-radius:8px;background:var(--ink);color:var(--sheet);font-weight:700}
+.say-partial{margin:0;font-size:17px;line-height:1.55;color:var(--ink);background:var(--sheet);border-radius:14px;padding:8px 12px;box-shadow:inset 3px 0 0 var(--accent)}
 
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
-@keyframes press{0%{transform:rotate(-14deg) scale(1.9);opacity:0}55%{opacity:1}100%{transform:rotate(-14deg) scale(1);opacity:.92}}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}70%{transform:scale(1.12);opacity:1}100%{transform:scale(1)}}
+@keyframes bob{0%,100%{transform:translateY(0) scale(1.06)}50%{transform:translateY(-4px) scale(1.12)}}
+@keyframes ripple{0%{opacity:.75;transform:scale(1)}100%{opacity:0;transform:scale(1.4)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes eq{0%,100%{height:3px}50%{height:9px}}
 @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}}
 
 @media (max-width:440px){
-  .mast{padding:12px 14px 10px}
-  .scroll{padding:14px 16px 24px}
+  .mast{padding:12px 14px 8px}
+  .scroll{padding:4px 12px 24px}
   .field.two{grid-template-columns:1fr}
-  .mast h1{font-size:22px}
+  .mast h1{font-size:24px}
   .lede{display:none}
-  .btn-end{padding:0 10px}
-  .btn-talk{padding:0 12px}
+  .btn-hand,.btn-end,.btn-talk{padding:0 12px}
 }
+
+/* 再生・過去の会議 */
+.brief-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn-play{background:var(--accent);color:#fff}
+.btn-play.is-on{background:var(--shu);color:#fff}
+.report.is-speaking{box-shadow:0 0 0 2px var(--ok)}
+.history{display:flex;flex-direction:column;gap:7px}
+.history-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;padding:0 4px}
+.history-head h2{margin:0;font-size:var(--t-sm);font-weight:600;color:var(--muted)}
+.history-head .sub{padding:0}
+.history-list{list-style:none;margin:0;padding:0;background:var(--sheet);border-radius:var(--r-card);overflow:hidden}
+.history-list li{position:relative}
+.history-list li+li::before{content:"";position:absolute;top:0;left:16px;right:0;height:1px;background:var(--rule)}
+.h-item{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:10px;width:100%;padding:11px 16px;border:none;background:none;text-align:left;color:inherit}
+.h-item:active{background:var(--fill)}
+.h-topic{font-weight:600;font-size:15px;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h-meta{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.h-chev{grid-row:1 / span 2;grid-column:2;align-self:center;color:var(--muted);font-size:22px;line-height:1}
+.h-more{width:100%;padding:11px 16px;border:none;background:none;color:var(--accent);font-weight:600;font-size:14px;text-align:left}
+.btn-danger{color:var(--shu)}
+body.in-meeting .mast .status{display:none}
 </style>
 </head>
 <body>
@@ -240,6 +305,11 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     </div>
     <span id="status" class="status" data-kind="idle" role="status" aria-live="polite">待機中</span>
   </header>
+
+  <div id="stage" class="stage" hidden>
+    <div id="stageRow" class="stage-row"></div>
+    <p id="stageCaption" class="stage-cap" aria-live="polite"></p>
+  </div>
 
   <div id="notice" class="notice" hidden>
     <div class="notice-body">
@@ -328,12 +398,17 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
       <div id="setupBrief" class="brief" hidden>
         <div class="brief-top">
           <span class="field-label">議題</span>
-          <button id="btnRedo" type="button" class="btn-ghost btn-sm">やり直す</button>
+          <div class="brief-actions"><button id="btnPlay" type="button" class="btn-ghost btn-sm btn-play" hidden>▶ 再生</button><button id="btnRedo" type="button" class="btn-ghost btn-sm">＋ 新しい会議</button></div>
         </div>
         <p id="briefTopic" class="brief-topic"></p>
         <div id="briefPeople" class="brief-people"></div>
         <div id="briefCost" class="brief-cost"></div>
       </div>
+    </section>
+
+    <section id="history" class="history" hidden aria-labelledby="historyH">
+      <div class="history-head"><h2 id="historyH">過去の会議</h2><span class="sub">この端末に自動で保存しています</span></div>
+      <ul id="historyList" class="history-list"></ul>
     </section>
 
     <section id="howto" class="howto" aria-labelledby="howtoH">
@@ -352,7 +427,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
           <h2 id="reportH">書記の報告</h2>
           <p id="reportMeta" class="report-meta"></p>
         </div>
-        <span id="stamp" class="stamp" aria-hidden="true" hidden>了</span>
+        <span id="stamp" class="stamp" aria-hidden="true" hidden>✓</span>
       </div>
       <p id="reportStale" class="report-stale" hidden>議論を続けています。終わると報告を作り直します。</p>
       <div id="reportBody" class="report-body"></div>
@@ -360,7 +435,9 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
         <button id="btnCopyReport" type="button" class="btn-ghost">報告をコピー</button>
         <button id="btnCopyAll" type="button" class="btn-ghost">会議録ごとコピー</button>
         <button id="btnSpeakReport" type="button" class="btn-ghost" hidden>報告を読み上げ</button>
-        <button id="btnNew" type="button" class="btn-ghost">新しい議題</button>
+        <button id="btnSaveFile" type="button" class="btn-ghost">議事録をファイルに保存</button>
+        <button id="btnNew" type="button" class="btn-ghost">＋ 新しい会議</button>
+        <button id="btnDelete" type="button" class="btn-ghost btn-danger">この会議を削除</button>
       </div>
     </section>
 
@@ -385,7 +462,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>
         <span id="btnTalkText">話す</span>
       </button>
-      <button id="btnSend" type="submit" class="btn-send">送信</button>
+      <button id="btnSend" type="submit" class="btn-send" aria-label="送信"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button>
     </form>
   </footer>
 </div>
@@ -442,6 +519,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
   var RATES = [1, 1.3, 1.6, 2];
   var PITCH = [1.0, 0.78, 1.28, 0.9, 1.14, 1.0];
   var STORE = 'ai5-kaigi-settings-v1', STORE_KEY = 'ai5-kaigi-key', STORE_LAST = 'ai5-kaigi-last-v1';
+  var STORE_HIST = 'ai5-kaigi-history-v1', HIST_MAX = 100;
 
   function presetPeople(k, keepModels) {
     return PRESETS[k].map(function (p) {
@@ -458,7 +536,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     transcript: [], active: [], phase: 'setup', running: false, paused: false, summarizing: false,
     aiTurns: 0, totalTurns: 15, nextPos: 0, roundShown: 0,
     job: null, prefetch: null, resumeResolver: null, sumCtrl: null,
-    report: '', startedAt: null, gen: 0, loopGen: null, cost: 0, listening: false, errIdx: null
+    report: '', startedAt: null, gen: 0, loopGen: null, cost: 0, listening: false, errIdx: null, meetingId: null
   };
 
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -494,10 +572,12 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
   }
   function saveLast() {
     if (!S.transcript.length) { lsDel(STORE_LAST); return; }
+    if (!S.meetingId) S.meetingId = newId();
     lsSet(STORE_LAST, JSON.stringify({
-      topic: S.topic, people: S.people, active: S.active, transcript: S.transcript, report: S.report,
+      id: S.meetingId, topic: S.topic, people: S.people, active: S.active, transcript: S.transcript, report: S.report,
       startedAt: S.startedAt ? S.startedAt.toISOString() : null, cost: S.cost
     }));
+    upsertHist();
   }
 
   // ---------- OpenRouter ----------
@@ -694,6 +774,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
   var rec = null;
   function startListening() {
     if (!SR || S.listening) return;
+    stopReplay();
     if (S.running && !S.paused) interrupt(); else speech.stop();
     var say = $('say');
     var base = say.value ? say.value.replace(/\s+$/, '') + ' ' : '';
@@ -767,7 +848,241 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     var s = $('status');
     s.dataset.kind = kind;
     s.textContent = (STATUS_TEXT[kind] || '').replace('{n}', name || '');
+    var cap = $('stageCaption');
+    if (cap) cap.textContent = (RP && RP.on && kind === 'speaking') ? '再生中：' + (name || '') : s.textContent;
+    if (kind !== 'thinking' && kind !== 'speaking') stageSet(null);
   }
+
+  // ---------- 話している人の列 ----------
+  function buildStage() {
+    var row = $('stageRow');
+    row.textContent = '';
+    S.active.forEach(function (i) {
+      var p = S.people[i];
+      if (!p) return;
+      var b = el('button', 'av');
+      b.type = 'button';
+      b.dataset.idx = String(i);
+      b.dataset.state = 'idle';
+      b.style.setProperty('--pc', SLOTS[p.slot].color);
+      b.setAttribute('aria-label', p.name + 'に質問する');
+      b.appendChild(el('span', 'av-face', p.seal));
+      b.appendChild(el('span', 'av-name', p.name));
+      var eq = el('span', 'av-eq');
+      for (var k = 0; k < 3; k++) eq.appendChild(el('i'));
+      b.appendChild(eq);
+      b.addEventListener('click', function () {
+        if (S.summarizing) return;
+        $('target').value = String(i);
+        $('stageCaption').textContent = p.name + 'への質問を書くか「話す」を押してください';
+        $('say').focus();
+      });
+      row.appendChild(b);
+    });
+  }
+  function stageSet(idx, state) {
+    var any = false;
+    var list = document.querySelectorAll('#stageRow .av');
+    for (var k = 0; k < list.length; k++) {
+      var on = idx != null && +list[k].dataset.idx === idx;
+      list[k].dataset.state = on ? state : 'idle';
+      if (on) any = true;
+    }
+    $('stage').classList.toggle('is-busy', any);
+  }
+
+  // ---------- 過去の会議（この端末に自動で保存） ----------
+  function newId() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function loadHist() {
+    try { var a = JSON.parse(lsGet(STORE_HIST) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+  }
+  function saveHist(list) {
+    for (;;) {
+      try { localStorage.setItem(STORE_HIST, JSON.stringify(list)); return true; }
+      catch (e) { if (list.length <= 1) return false; list.pop(); }
+    }
+  }
+  function upsertHist() {
+    if (!S.transcript.length) return;
+    if (!S.meetingId) S.meetingId = newId();
+    var snap = {
+      id: S.meetingId, topic: S.topic, people: JSON.parse(JSON.stringify(S.people)), active: S.active.slice(),
+      transcript: S.transcript, report: S.report, cost: S.cost,
+      startedAt: S.startedAt ? S.startedAt.toISOString() : null, updatedAt: new Date().toISOString()
+    };
+    var list = loadHist().filter(function (e) { return e && e.id !== snap.id; });
+    list.unshift(snap);
+    if (list.length > HIST_MAX) list.length = HIST_MAX;
+    saveHist(list);
+  }
+  var histAll = false;
+  function renderHistory() {
+    var list = loadHist();
+    var box = $('historyList');
+    box.textContent = '';
+    $('history').hidden = !list.length || S.phase !== 'setup';
+    var shown = histAll ? list : list.slice(0, 8);
+    shown.forEach(function (m) {
+      var li = el('li');
+      var b = el('button', 'h-item');
+      b.type = 'button';
+      b.appendChild(el('span', 'h-topic', m.topic || '（議題なし）'));
+      var ai = (m.transcript || []).filter(function (t) { return t && t.who !== 'human'; }).length;
+      var d = m.startedAt ? new Date(m.startedAt) : null;
+      b.appendChild(el('span', 'h-meta', (d ? fmtDate(d) : '') + '　発言' + ai + '回' + (m.report ? '' : '（報告なし）') + '　' + fmtCost(+m.cost || 0)));
+      b.appendChild(el('span', 'h-chev', '›'));
+      b.addEventListener('click', function () { openMeeting(m); });
+      li.appendChild(b);
+      box.appendChild(li);
+    });
+    if (list.length > shown.length) {
+      var more = el('button', 'h-more', 'すべて表示（' + list.length + '件）');
+      more.type = 'button';
+      more.addEventListener('click', function () { histAll = true; renderHistory(); });
+      var li2 = el('li');
+      li2.appendChild(more);
+      box.appendChild(li2);
+    }
+  }
+  function loadMeeting(d) {
+    if (!d || !Array.isArray(d.transcript) || !d.transcript.length) return false;
+    if (Array.isArray(d.people) && d.people.length === 5) {
+      d.people.forEach(function (p, i) { if (p && SLOTS[p.slot]) S.people[i] = { slot: p.slot, name: String(p.name), seal: String(p.seal).slice(0, 1), role: String(p.role), model: String(p.model), on: p.on !== false }; });
+    }
+    var act = (Array.isArray(d.active) ? d.active : []).filter(function (i) { return S.people[i]; });
+    if (!act.length) return false;
+    S.active = act;
+    S.transcript = d.transcript.filter(function (t) { return t && typeof t.text === 'string' && (t.who === 'human' || S.people[t.who]); });
+    S.topic = typeof d.topic === 'string' ? d.topic : S.topic;
+    S.report = typeof d.report === 'string' ? d.report : '';
+    S.startedAt = d.startedAt ? new Date(d.startedAt) : null;
+    S.cost = +d.cost || 0;
+    S.meetingId = d.id || newId();
+    S.phase = S.report ? 'done' : 'stopped';
+    $('minutes').hidden = false;
+    $('howto').hidden = true;
+    $('history').hidden = true;
+    showBrief();
+    buildTargets();
+    rebuildLog();
+    if (S.report) {
+      $('report').hidden = false;
+      $('report').classList.remove('is-stale');
+      $('reportStale').hidden = true;
+      renderReport(S.report, true);
+      updateReportMeta();
+      $('stamp').hidden = false;
+      setStatus('done');
+    } else {
+      $('report').hidden = true;
+      setStatus('stopped');
+    }
+    return true;
+  }
+  function openMeeting(m) {
+    stopReplay();
+    S.gen++;
+    S.running = false; S.paused = false; S.summarizing = false;
+    haltActivity();
+    wake();
+    if (!loadMeeting(m)) { showNotice('この会議は開けませんでした。'); return; }
+    saveLast();
+    hideNotice();
+    updateDock();
+    $('scroll').scrollTop = 0;
+  }
+  function deleteMeeting() {
+    var id = S.meetingId;
+    if (id) saveHist(loadHist().filter(function (e) { return e && e.id !== id; }));
+    newMeeting();
+  }
+  function fileName() {
+    var d = S.startedAt || new Date();
+    var z = function (n) { return String(n).padStart(2, '0'); };
+    var t = String(S.topic || '会議').replace(/[\\/:*?"<>|\s]+/g, '').slice(0, 24);
+    return '議事録_' + d.getFullYear() + z(d.getMonth() + 1) + z(d.getDate()) + '_' + z(d.getHours()) + z(d.getMinutes()) + '_' + t + '.txt';
+  }
+  function downloadMinutes(btn) {
+    var orig = btn.textContent;
+    try {
+      var blob = new Blob(['﻿' + allPlain()], { type: 'text/plain;charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName();
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+      btn.textContent = '保存しました';
+    } catch (e) { btn.textContent = '保存できませんでした'; }
+    setTimeout(function () { btn.textContent = orig; }, 1800);
+  }
+
+  // ---------- 再生（各AIの声で順番に、最後に書記の報告まで） ----------
+  var RP = { on: false, token: 0 };
+  function reportPlain() {
+    return S.report.split('\n')
+      .map(function (l) { return l.replace(/^[■□☐・\-•]\s*/, '').trim(); })
+      .filter(Boolean)
+      .map(function (l) { return /[。！？!?]$/.test(l) ? l : l + '。'; })
+      .join('\n');
+  }
+  function clearSpeaking() {
+    var els = document.querySelectorAll('.is-speaking');
+    for (var k = 0; k < els.length; k++) els[k].classList.remove('is-speaking');
+  }
+  function updatePlayUI() {
+    var b = $('btnPlay');
+    if (!b) return;
+    var has = S.transcript.some(function (t) { return t.who !== 'human'; });
+    b.hidden = !(canSpeak && has && !S.running && !S.summarizing);
+    b.textContent = RP.on ? '■ 止める' : '▶ 再生';
+    b.classList.toggle('is-on', RP.on);
+  }
+  function playFrom(start) {
+    if (!canSpeak || S.running || S.summarizing) return;
+    var items = S.transcript.map(function (t, i) { return { ti: i, who: t.who, text: t.text }; });
+    if (S.report) items.push({ ti: -1, who: 'scribe', text: S.report });
+    if (!items.length) return;
+    RP.on = true;
+    var tk = ++RP.token;
+    updatePlayUI();
+    keepAwake(true);
+    (function step(k) {
+      if (tk !== RP.token) return;
+      clearSpeaking();
+      if (k >= items.length) { finishReplay(); return; }
+      var it = items[k];
+      var node, name, vi, text;
+      if (it.who === 'scribe') { node = $('report'); name = '書記'; vi = 5; text = '書記の報告です。\n' + reportPlain(); }
+      else {
+        node = document.querySelector('#log [data-ti="' + it.ti + '"]');
+        if (it.who === 'human') { name = '主催者'; vi = 5; text = '主催者の発言です。' + it.text; }
+        else { name = S.people[it.who].name; vi = Math.max(0, S.active.indexOf(it.who)); text = it.text; }
+      }
+      if (node) {
+        node.classList.add('is-speaking');
+        try { node.scrollIntoView({ block: it.who === 'scribe' ? 'start' : 'center', behavior: 'smooth' }); } catch (e) { /* なし */ }
+      }
+      setStatus('speaking', name);
+      stageSet(typeof it.who === 'number' ? it.who : null, 'speaking');
+      speech.say(plainForSpeech(text), vi).then(function () { step(k + 1); });
+    })(start || 0);
+  }
+  function finishReplay() {
+    RP.on = false;
+    clearSpeaking();
+    stageSet(null);
+    setStatus(S.report ? 'done' : 'stopped');
+    updatePlayUI();
+    if (!S.running && !S.summarizing) keepAwake(false);
+  }
+  function stopReplay() {
+    if (!RP.on) return;
+    RP.token++;
+    speech.stop();
+    finishReplay();
+  }
+
   function showNotice(t, actionLabel, action) {
     $('noticeText').textContent = t;
     var b = $('noticeAction');
@@ -894,12 +1209,14 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     box.textContent = '';
     S.active.forEach(function (i) {
       var p = S.people[i];
-      var s = el('span', null, '○' + p.name);
+      var s = el('span', null, p.name);
       s.style.setProperty('--pc', SLOTS[p.slot].color);
       s.title = p.role + '／' + p.model;
       box.appendChild(s);
     });
     updateCost();
+    buildStage();
+    updatePlayUI();
   }
   function updateCost() {
     $('briefCost').textContent = 'この会議の費用 ' + fmtCost(S.cost) + '（OpenRouterの集計）';
@@ -914,6 +1231,8 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
   }
   function updateDock() {
     $('dock').hidden = (S.phase === 'setup');
+    $('stage').hidden = (S.phase === 'setup');
+    document.body.classList.toggle('in-meeting', S.phase !== 'setup');
     var hand = $('btnHand'), end = $('btnEnd'), say = $('say');
     if (S.running) {
       hand.hidden = false;
@@ -937,10 +1256,11 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     sp.hidden = !(S.voice && canSpeak);
     sp.textContent = S.rate + '×';
     updateTalk();
+    updatePlayUI();
     if (busy) say.placeholder = '書記がまとめています…';
-    else if (S.running) say.placeholder = S.paused ? '書くか「話す」で発言すると再開します' : '書くか「話す」で発言すると、次の人が答えます';
-    else if (S.phase === 'done') say.placeholder = '追加で質問すると、もう1巡議論して報告を作り直します';
-    else say.placeholder = '発言すると、議論を再開します';
+    else if (S.running) say.placeholder = S.paused ? '入力して送ると再開' : '質問や意見を入力';
+    else if (S.phase === 'done') say.placeholder = '追加の質問（もう1巡します）';
+    else say.placeholder = '入力して送ると再開';
   }
 
   // ---------- 会議録 ----------
@@ -958,7 +1278,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     seal.setAttribute('aria-hidden', 'true');
     var body = el('div', 'turn-body');
     var head = el('div', 'turn-head');
-    head.appendChild(el('span', 'turn-name', '○' + p.name));
+    head.appendChild(el('span', 'turn-name', p.name));
     head.appendChild(el('span', 'turn-role', p.role.split('。')[0]));
     head.appendChild(el('span', 'turn-no', '第' + no + '発言'));
     var txt = el('p', 'turn-text');
@@ -998,24 +1318,27 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     var body = el('div', 'turn-body');
     var head = el('div', 'turn-head');
     var dest = (to === null || to === undefined) ? '〔全員へ〕' : '〔' + S.people[to].name + 'へ〕';
-    head.appendChild(el('span', 'turn-name', '○主催者'));
+    head.appendChild(el('span', 'turn-name', 'あなた'));
     head.appendChild(el('span', 'turn-no', dest));
     body.appendChild(head);
     body.appendChild(el('p', 'turn-text', text));
     li.appendChild(seal);
     li.appendChild(body);
     $('log').appendChild(li);
+    return li;
   }
   function perRound() { return Math.max(1, S.active.length); }
   function rebuildLog() {
     $('log').textContent = '';
     var ai = 0, lastAi = null;
     S.roundShown = 0;
-    S.transcript.forEach(function (t) {
-      if (t.who === 'human') { addHuman(t.text, t.to); return; }
+    S.transcript.forEach(function (t, ti) {
+      if (t.who === 'human') { addHuman(t.text, t.to).dataset.ti = String(ti); return; }
       var r = Math.floor(ai / perRound()) + 1;
       if (r > S.roundShown) { addRound(r); S.roundShown = r; }
-      finishTurn(addTurn(t.who, ai + 1), t);
+      var tli = addTurn(t.who, ai + 1);
+      finishTurn(tli, t);
+      tli.dataset.ti = String(ti);
       ai++;
       lastAi = t.who;
     });
@@ -1203,7 +1526,8 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
           if (round > S.roundShown) { addRound(round); S.roundShown = round; }
           var li = addTurn(job.idx, S.aiTurns + 1);
           setStatus('thinking', p.name);
-          job.listener = (function (node) { return function (t) { setTurnText(node, t); }; })(li);
+          stageSet(job.idx, 'thinking');
+          job.listener = (function (node, who) { return function (t) { setTurnText(node, t); stageSet(who, 'speaking'); }; })(li, job.idx);
           if (job.text) setTurnText(li, job.text);
 
           var out;
@@ -1226,6 +1550,8 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
           var entry = { who: job.idx, text: text, cites: out.cites || [], cost: cost };
           finishTurn(li, entry);
           S.transcript.push(entry);
+          li.dataset.ti = String(S.transcript.length - 1);
+          stageSet(null);
           S.aiTurns += 1;
           S.nextPos = (S.active.indexOf(job.idx) + 1) % S.active.length;
           updateCost();
@@ -1234,9 +1560,11 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
           if (S.voice && canSpeak && !S.paused) {
             if (S.aiTurns < S.totalTurns) S.prefetch = startJob(speakerAt(S.nextPos));
             setStatus('speaking', p.name);
+            stageSet(job.idx, 'speaking');
             li.classList.add('is-speaking');
             await speech.say(plainForSpeech(text), S.active.indexOf(job.idx) >= 0 ? S.active.indexOf(job.idx) : 0);
             li.classList.remove('is-speaking');
+            stageSet(null);
           }
         }
         if (S.running && S.gen === gen) {
@@ -1370,7 +1698,9 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     saveSettings();
     if (S.voice) speech.unlock();
 
+    stopReplay();
     S.gen++;
+    S.meetingId = newId();
     S.active = act;
     S.transcript = []; S.report = ''; S.aiTurns = 0; S.roundShown = 0; S.nextPos = 0; S.cost = 0;
     S.totalTurns = S.rounds * act.length;
@@ -1381,6 +1711,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     $('report').classList.remove('is-stale');
     $('minutes').hidden = false;
     $('howto').hidden = true;
+    $('history').hidden = true;
     showBrief();
     buildTargets();
     hideNotice();
@@ -1409,9 +1740,10 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     var to = (tv === 'all' || tv === '') ? null : +tv;
     $('say').value = '';
     autoGrow();
+    stopReplay();
     haltActivity();
     S.transcript.push({ who: 'human', text: text, to: to });
-    addHuman(text, to);
+    addHuman(text, to).dataset.ti = String(S.transcript.length - 1);
     if (to !== null && S.active.indexOf(to) >= 0) S.nextPos = S.active.indexOf(to);
     hideNotice();
     if (S.running) {
@@ -1431,6 +1763,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
   }
   async function endMeeting() {
     if (S.summarizing) return;
+    stopReplay();
     if (S.running) {
       S.running = false;
       S.paused = false;
@@ -1440,6 +1773,7 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     await summarize(S.gen);
   }
   function newMeeting() {
+    stopReplay();
     S.gen++;
     S.running = false; S.paused = false;
     haltActivity();
@@ -1457,6 +1791,8 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     $('setupForm').hidden = false;
     $('setupBrief').hidden = true;
     $('howto').hidden = false;
+    S.meetingId = null;
+    renderHistory();
     renderSetup();
     setStatus('idle');
     hideNotice();
@@ -1581,19 +1917,49 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
     if (idle || b.dataset.armed === '1') {
       clearTimeout(redoTimer);
       b.dataset.armed = '';
-      b.textContent = 'やり直す';
+      b.textContent = '＋ 新しい会議';
       newMeeting();
       return;
     }
     b.dataset.armed = '1';
     b.textContent = 'もう一度押すと中止します';
-    redoTimer = setTimeout(function () { b.dataset.armed = ''; b.textContent = 'やり直す'; }, 3500);
+    redoTimer = setTimeout(function () { b.dataset.armed = ''; b.textContent = '＋ 新しい会議'; }, 3500);
   });
   $('btnNew').addEventListener('click', newMeeting);
   $('btnCopyReport').addEventListener('click', function () { copyTo($('btnCopyReport'), S.report || ''); });
   $('btnCopyAll').addEventListener('click', function () { copyTo($('btnCopyAll'), allPlain()); });
+  $('btnPlay').addEventListener('click', function () {
+    if (RP.on) { stopReplay(); return; }
+    speech.stop();
+    playFrom(0);
+  });
+  $('log').addEventListener('click', function (ev) {
+    if (!RP.on || !ev.target.closest) return;
+    var li = ev.target.closest('[data-ti]');
+    if (!li) return;
+    RP.token++;
+    speech.stop();
+    RP.on = false;
+    playFrom(+li.dataset.ti);
+  });
+  $('btnSaveFile').addEventListener('click', function () { downloadMinutes($('btnSaveFile')); });
+  var delTimer = null;
+  $('btnDelete').addEventListener('click', function () {
+    var b = $('btnDelete');
+    if (b.dataset.armed === '1') {
+      clearTimeout(delTimer);
+      b.dataset.armed = '';
+      b.textContent = 'この会議を削除';
+      deleteMeeting();
+      return;
+    }
+    b.dataset.armed = '1';
+    b.textContent = 'もう一度押すと削除します';
+    delTimer = setTimeout(function () { b.dataset.armed = ''; b.textContent = 'この会議を削除'; }, 3500);
+  });
   $('btnSpeakReport').addEventListener('click', function () {
     if (!S.report) return;
+    stopReplay();
     speech.stop();
     speakReport();
   });
@@ -1607,33 +1973,9 @@ textarea,select,input[type="text"],input[type="password"]{font-size:16px}
   (function restoreLast() {
     var d = null;
     try { d = JSON.parse(lsGet(STORE_LAST) || 'null'); } catch (e) { d = null; }
-    if (!d || !Array.isArray(d.transcript) || !d.transcript.length) return;
-    if (Array.isArray(d.people) && d.people.length === 5) {
-      d.people.forEach(function (p, i) { if (p && SLOTS[p.slot]) S.people[i] = { slot: p.slot, name: String(p.name), seal: String(p.seal).slice(0, 1), role: String(p.role), model: String(p.model), on: p.on !== false }; });
-    }
-    S.active = (Array.isArray(d.active) ? d.active : []).filter(function (i) { return S.people[i]; });
-    if (!S.active.length) return;
-    S.transcript = d.transcript.filter(function (t) { return t && typeof t.text === 'string' && (t.who === 'human' || S.people[t.who]); });
-    S.topic = typeof d.topic === 'string' ? d.topic : S.topic;
-    S.report = typeof d.report === 'string' ? d.report : '';
-    S.startedAt = d.startedAt ? new Date(d.startedAt) : null;
-    S.cost = +d.cost || 0;
-    S.phase = S.report ? 'done' : 'stopped';
-    $('minutes').hidden = false;
-    $('howto').hidden = true;
-    showBrief();
-    buildTargets();
-    rebuildLog();
-    if (S.report) {
-      $('report').hidden = false;
-      renderReport(S.report, true);
-      updateReportMeta();
-      $('stamp').hidden = false;
-      setStatus('done');
-    } else {
-      setStatus('stopped');
-    }
+    if (d && loadMeeting(d)) saveLast();
   })();
+  renderHistory();
   updateDock();
   loadModels();
 })();
