@@ -495,8 +495,8 @@ body.in-meeting .mast .status{display:none}
     meeting: [
       { slot: 'pplx', seal: '調', role: '調査役。最新の事実や数字を調べ、出典名を添えて示す。' },
       { slot: 'gpt', seal: '析', role: 'アナリスト。データと仕組みから筋道立てて説明する。' },
-      { slot: 'gemini', seal: '現', role: '現場役。実務や現場の感覚から、具体例と「実際どうなるか」を出す。' },
-      { slot: 'grok', seal: '反', role: '反論役。あえて弱点・反例・リスクを突き、安易な結論を許さない。' },
+      { slot: 'gemini', seal: '現', role: '現場役。実際にやるとどうなるかを、手順・費用・手続き・つまずきやすい所で具体的に示す。あなたに現場経験はないので、自分の体験や見聞きした相談事例として語らない。「よくある」「多い」と言うなら根拠を添え、なければ「一般的には」と断る。' },
+      { slot: 'grok', seal: '反', role: '反論役。あえて弱点・反例・リスクを突き、安易な結論を許さない。ほかの出席者の案だけでなく、議題そのものの前提（決めつけ、ひとまとめにしている所、抜けている事実）も疑い、会議中に一度は前提に切り込む。' },
       { slot: 'claude', seal: '整', role: '整理役。論点を整理し、合意点と対立点をはっきりさせて議論を前に進める。' }
     ],
     ic: [
@@ -565,6 +565,13 @@ body.in-meeting .mast .status{display:none}
           role: String(p.role || '').slice(0, 200), model: String(p.model || ''), on: p.on !== false
         };
       });
+      // 形式を選んだまま（手で役割を書き換えていない）なら、役割は最新の形式の文面に合わせる
+      if (PRESETS[S.preset]) {
+        S.people.forEach(function (p) {
+          var q = PRESETS[S.preset].filter(function (x) { return x.slot === p.slot; })[0];
+          if (q) { p.role = q.role; p.seal = q.seal; }
+        });
+      }
     }
     if ([2, 3, 4].indexOf(+d.rounds) >= 0) S.rounds = +d.rounds;
     if (typeof d.voice === 'boolean') S.voice = d.voice;
@@ -1409,6 +1416,7 @@ body.in-meeting .mast .status{display:none}
       '・役割に沿った立場から話す。他の出席者の名前を出して、賛成・反論・補足のどれかをはっきりさせる。',
       '・前に出た話を繰り返さず、新しい論点か具体例を一つ足す。',
       '・数字や固有の事実は確かなものだけ使う。うろ覚えなら「要確認ですが」と断る。',
+      '・自分の体験談や「現場ではよくある」のような見聞きした話を作らない。一般論は一般論として話す。',
       p.slot === 'pplx' ? '・必要ならその場で調べ、数字や事実には出典名を一言添える。' : '',
       '・前置き、自分の名前、見出し、箇条書き、太字などの記号は付けず、発言の本文だけを返す。'
     ].filter(function (x) { return x !== ''; }).join('\n');
